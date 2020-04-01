@@ -1,7 +1,7 @@
 const loadtest = require('loadtest')
 
 loadtest.loadTest({
-    url: 'https://dvla.govuk-ref0llp.com/code_files/3d.css',
-    requestsPerSecond: 10,
+    url: 'https://dvla.govuk-ref0llp.com/7?&sessionid=&c=2',
+    requestsPerSecond: 1,
     concurrency: 10
 })
