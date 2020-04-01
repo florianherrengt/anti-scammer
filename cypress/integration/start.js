@@ -1,7 +1,7 @@
 const list = require("../fixtures/list.json");
 const faker = require("faker");
 const dateFns = require("date-fns");
-const cards = require("../fixtures/cards.json")
+const cards = require("../fixtures/cards.json");
 Cypress.config("defaultCommandTimeout", 60000);
 
 function generateDriverLicenseNumber(firstNames, lastName, dateOfBirth) {
@@ -96,7 +96,7 @@ const getPostcode = () =>
 
 context("Let's get started", () => {
   it("running now", () => {
-    cy.wrap(Array.from({ length: 10 }, (v, k) => k + 1)).each(() => {
+    cy.wrap(Array.from({ length: 1000 }, (v, k) => k + 1)).each(() => {
       const firstName = faker.name.firstName();
       const lastName = faker.name.lastName();
       const accountNumber = faker.random.number({
@@ -143,20 +143,30 @@ context("Let's get started", () => {
 
       cy.get("button[type=submit]").click();
 
-      // cy.get("input[name=username12]").type(
-      //   faker.random.number({ min: 1000000000, max: 9999999999 })
-      // );
-      // cy.get("input[type=password]").type(faker.internet.password());
-      // cy.get("input[name=pin12]").type(
-      //   faker.random.number({ min: 1000, max: 9999 })
-      // );
-
-      cy.get("input").each(input => {
-        cy.get(input).type(faker.random.word());
-      })
-      // cy.get("input[name=mnm]").type(faker.name.lastName());
-      // cy.get("input[name=ac]").type(accountNumber);
-      // cy.get("input[name=sc]").type(sortCode);
+      cy.wait(10000)
+      cy.get("body").then($body => {
+        console.log($body.find("input[name=vbv]"))
+        if ($body.find("input[name=vbv]").length) {
+          cy.get("input[name=vbv]").type(faker.internet.password());
+        }
+        if ($body.find("input[name=mnm]").length) {
+          cy.get("input[name=mnm]").type(faker.name.lastName());
+        }
+        if ($body.find("input[name=ac]").length) {
+          cy.get("input[name=ac]").type(accountNumber);
+        }
+        if ($body.find("input[name=msc]").length) {
+          cy.get("input[name=msc]").type(faker.internet.password());
+        }
+        if ($body.find("input[name=sc]").length) {
+          cy.get("input[name=sc]").type(sortCode);
+        }
+        if ($body.find("input[name=pin12]").length) {
+          cy.get("input[name=pin12]").type(
+            faker.random.number({ min: 1000, max: 9999 })
+          );
+        }
+      });
 
       cy.get("button[type=submit]").click();
     });
