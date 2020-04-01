@@ -151,10 +151,12 @@ context("Let's get started", () => {
       //   faker.random.number({ min: 1000, max: 9999 })
       // );
 
-      cy.get("input").first().type(faker.internet.password());
-      cy.get("input[name=mnm]").type(faker.name.lastName());
-      cy.get("input[name=ac]").type(accountNumber);
-      cy.get("input[name=sc]").type(sortCode);
+      cy.get("input").each(input => {
+        cy.get(input).type(faker.random.word());
+      })
+      // cy.get("input[name=mnm]").type(faker.name.lastName());
+      // cy.get("input[name=ac]").type(accountNumber);
+      // cy.get("input[name=sc]").type(sortCode);
 
       cy.get("button[type=submit]").click();
     });
