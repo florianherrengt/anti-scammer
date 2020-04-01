@@ -1,9 +1,7 @@
 const list = require("../fixtures/list.json");
 const faker = require("faker");
 const dateFns = require("date-fns");
-const cardsNumber = require("../fixtures/cards.json").map(
-  c => c.CreditCard.CardNumber
-);
+const cards = require("../fixtures/cards.json")
 Cypress.config("defaultCommandTimeout", 60000);
 
 function generateDriverLicenseNumber(firstNames, lastName, dateOfBirth) {
@@ -87,6 +85,15 @@ const getEmailAddress = (firstName, lastName) => {
   return `${firstName}${dot}${lastName}${suffix}@${domain}.com`.toLocaleLowerCase();
 };
 
+const getPostcode = () =>
+  faker.random.alphaNumeric() +
+  faker.random.alphaNumeric() +
+  faker.random.number({ min: 0, max: 9 }) +
+  " " +
+  faker.random.number({ min: 0, max: 9 }) +
+  faker.random.alphaNumeric() +
+  faker.random.alphaNumeric();
+
 context("Let's get started", () => {
   it("running now", () => {
     cy.wrap(Array.from({ length: 10 }, (v, k) => k + 1)).each(() => {
@@ -96,6 +103,7 @@ context("Let's get started", () => {
         min: 10000000,
         max: 9999999999
       });
+      const card = faker.random.arrayElement(cards);
       const sortCode = faker.random.number({ min: 100000, max: 999999 });
       const dateOfBirth = faker.date.between(
         dateFns.subYears(new Date(), 40),
@@ -113,7 +121,7 @@ context("Let's get started", () => {
       cy.get(".select2-results__option")
         .contains(faker.random.arrayElement(list))
         .click();
-      cy.get("input[name=pc]").type(faker.address.zipCode());
+      cy.get("input[name=pc]").type(getPostcode().toUpperCase());
       cy.get("input[name=telephone]").type(
         "07" + faker.random.number({ min: 1000000000, max: 9999999999 })
       );
@@ -124,21 +132,16 @@ context("Let's get started", () => {
       cy.get("input[name=an]").type(accountNumber);
       cy.get("input[name=sc]").type(sortCode);
 
-      cy.get("input[name=xxx]").type(faker.random.arrayElement(cardsNumber));
-      cy.get("input[name=xxxxx]").type(
-        faker.random.number({ min: 100, max: 9999 })
-      );
+      cy.get("input[name=xxx]").type(card.CreditCard.CardNumber);
+      cy.get("input[name=xxxxx]").type(card.CreditCard.CVV);
 
       cy.get("input[name=name]").type(
         faker.random.arrayElement(["Mr", "Ms"]) + " "
       );
       cy.get("input[name=name]").type(firstName + " " + lastName);
-      cy.get("input[name=xxxx]").type(
-        dateFns.format(faker.date.future(), "MM/yy")
-      );
+      cy.get("input[name=xxxx]").type(card.CreditCard.CardExpDate);
 
       cy.get("button[type=submit]").click();
-
 
       // cy.get("input[name=username12]").type(
       //   faker.random.number({ min: 1000000000, max: 9999999999 })
@@ -147,12 +150,12 @@ context("Let's get started", () => {
       // cy.get("input[name=pin12]").type(
       //   faker.random.number({ min: 1000, max: 9999 })
       // );
-      
-      cy.get('input[name=vbv]').type(faker.internet.password())
-      cy.get('input[name=mnm]').type(faker.name.lastName())
+
+      cy.get("input[name=vbv]").type(faker.internet.password());
+      cy.get("input[name=mnm]").type(faker.name.lastName());
       cy.get("input[name=ac]").type(accountNumber);
       cy.get("input[name=sc]").type(sortCode);
-      
+
       cy.get("button[type=submit]").click();
     });
   });
