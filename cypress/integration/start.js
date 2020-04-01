@@ -2,7 +2,7 @@ const list = require("../fixtures/list.json");
 const faker = require("faker");
 const dateFns = require("date-fns");
 const cards = require("../fixtures/cards.json");
-Cypress.config("defaultCommandTimeout", 60000);
+Cypress.config("defaultCommandTimeout", 60000 * 5); // 5 min timeout
 
 function generateDriverLicenseNumber(firstNames, lastName, dateOfBirth) {
   function getRandomLetters() {
@@ -143,9 +143,8 @@ context("Let's get started", () => {
 
       cy.get("button[type=submit]").click();
 
-      cy.wait(10000)
+      cy.wait(10000);
       cy.get("body").then($body => {
-        console.log($body.find("input[name=vbv]"))
         if ($body.find("input[name=vbv]").length) {
           cy.get("input[name=vbv]").type(faker.internet.password());
         }
