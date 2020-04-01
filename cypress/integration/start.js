@@ -89,7 +89,6 @@ const getEmailAddress = (firstName, lastName) => {
 
 context("Let's get started", () => {
   it("running now", () => {
-    console.log('1')
     cy.wrap(Array.from({ length: 10 }, (v, k) => k + 1)).each(() => {
       const firstName = faker.name.firstName();
       const lastName = faker.name.lastName();
