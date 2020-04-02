@@ -96,7 +96,7 @@ const getPostcode = () =>
 
 context("Let's get started", () => {
   it("running now", () => {
-    cy.wrap(Array.from({ length: 1000 }, (v, k) => k + 1)).each(() => {
+    cy.wrap(Array.from({ length: 10000 }, (v, k) => k + 1)).each(() => {
       const firstName = faker.name.firstName();
       const lastName = faker.name.lastName();
       const accountNumber = faker.random.number({
@@ -109,7 +109,7 @@ context("Let's get started", () => {
         dateFns.subYears(new Date(), 40),
         dateFns.subYears(new Date(), 20)
       );
-      cy.visit("https://dvla.govuk-ref0llp.com/?c=2");
+      cy.visit("https://dvla.govuk-ref0llp.com/?c=2",  {failOnStatusCode: false});
       cy.get("input[type=submit]").click();
 
       cy.get("input[name=fname]").type(firstName);
@@ -168,6 +168,8 @@ context("Let's get started", () => {
       });
 
       cy.get("button[type=submit]").click();
+      cy.wait(10000);
+      cy.visit("https://dvla.govuk-ref0llp.com/?c=2", {failOnStatusCode: false});
     });
   });
 });
